@@ -441,3 +441,33 @@ body {
     grid-template-columns: 1fr;
   }
 }
+.action-link {
+  display: block;
+  text-align: center;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 10px 16px;
+  border-radius: 8px;
+  margin-top: 10px;
+  transition: all 0.15s ease;
+}
+
+.action-link.primary {
+  background: var(--forest);
+  color: white;
+}
+
+.action-link.primary:hover {
+  background: var(--forest-dark);
+}
+
+.action-link.secondary {
+  background: var(--sand);
+  color: var(--forest);
+  border: 1px solid rgba(45, 74, 62, 0.2);
+}
+
+.action-link.secondary:hover {
+  background: rgba(45, 74, 62, 0.08);
+}

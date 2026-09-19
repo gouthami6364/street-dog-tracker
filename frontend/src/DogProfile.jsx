@@ -113,12 +113,13 @@ function DogProfile() {
     ></iframe>
   </div>
 )}
-<Link to="/nearby" style={{ fontSize: '0.85rem', color: 'var(--forest)', fontWeight: '600', display: 'block', marginTop: '10px' }}>
-  🐾 Dogs near you →
+<Link to="/nearby" className="action-link secondary">
+  🐾 Dogs near you
 </Link>
-<Link to="/" style={{ fontSize: '0.85rem', color: 'var(--forest)', fontWeight: '600', display: 'block', marginTop: '6px' }}>
-    ➕ Register another dog
-  </Link>
+
+<Link to="/" className="action-link primary">
+  ➕ Register another dog
+</Link>
         </div>
       </div>
     </div>
