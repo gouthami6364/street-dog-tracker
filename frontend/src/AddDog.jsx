@@ -57,45 +57,49 @@ function AddDog() {
     }
   };
 
-  const handlePrintQR = () => {
-    const canvas = qrRef.current.querySelector('canvas');
-    const imageUrl = canvas.toDataURL('image/png');
+ const handlePrintQR = () => {
+  const canvas = qrRef.current.querySelector('canvas');
+  const imageUrl = canvas.toDataURL('image/png');
 
-    const printWindow = window.open('', '_blank');
-    printWindow.document.write(`
-      <html>
-        <head>
-          <title>${addedDog.name}'s QR Code</title>
-          <style>
-            body {
-              display: flex;
-              flex-direction: column;
-              align-items: center;
-              justify-content: center;
-              height: 100vh;
-              margin: 0;
-              font-family: sans-serif;
-            }
-            img {
-              width: 250px;
-              height: 250px;
-            }
-            p {
-              margin-top: 12px;
-              font-size: 16px;
-              font-weight: bold;
-            }
-          </style>
-        </head>
-        <body>
-          <img src="${imageUrl}" />
-          <p>${addedDog.name} — Pawfile</p>
-        </body>
-      </html>
-    `);
-    printWindow.document.close();
-  };
-
+  const printWindow = window.open('', '_blank');
+  printWindow.document.write(`
+    <html>
+      <head>
+        <title>${addedDog.name}'s QR Code</title>
+        <style>
+          @page {
+            size: 5cm 5cm;
+            margin: 0;
+          }
+          body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: sans-serif;
+          }
+          img {
+            width: 3cm;
+            height: 3cm;
+          }
+          p {
+            margin-top: 4px;
+            font-size: 10px;
+            font-weight: bold;
+            text-align: center;
+          }
+        </style>
+      </head>
+      <body>
+        <img src="${imageUrl}" />
+        <p>${addedDog.name}</p>
+      </body>
+    </html>
+  `);
+  printWindow.document.close();
+};
   return (
     <div className="page">
       <form className="add-dog-form" onSubmit={handleSubmit}>
