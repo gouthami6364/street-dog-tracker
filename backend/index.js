@@ -1,3 +1,12 @@
+const fs = require('fs');
+
+if (!fs.existsSync('uploads')) {
+  fs.mkdirSync('uploads');
+}
+
+
+
+
 require('dotenv').config();
 const { Pool } = require('pg');
 
