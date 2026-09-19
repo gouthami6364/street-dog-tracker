@@ -9,7 +9,8 @@ function AddDog() {
   const [breed, setBreed] = useState("");
   const [gender, setgender] = useState("male");
   const [vaccinated, setVaccinated] = useState("no");
-const [addedDog, setAddedDog] = useState(null);
+  const [addedDog, setAddedDog] = useState(null);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -22,8 +23,7 @@ const [addedDog, setAddedDog] = useState(null);
       formData.append('photo', photo);
     }
 
-    const response = await fetch('https://street-dog-tracker.onrender.com', {
-      
+    const response = await fetch('https://street-dog-tracker.onrender.com/api/dogs', {
       method: 'POST',
       body: formData
     });
@@ -91,13 +91,14 @@ const [addedDog, setAddedDog] = useState(null);
         </select>
         <button type="submit">Add Dog</button>
       </form>
+
       {addedDog && (
-  <div className="qr-box">
-    <p>QR code for {addedDog.name}:</p>
-    <QRCodeCanvas value={`https://street-dog-tracker.onrender.com/${addedDog.id}`} size={180} />
-    <p className="qr-link">https://street-dog-tracker.onrender.com/{addedDog.id}</p>
-  </div>
-)}
+        <div className="qr-box">
+          <p>QR code for {addedDog.name}:</p>
+          <QRCodeCanvas value={`https://street-dog-tracker.onrender.com/dog/${addedDog.id}`} size={180} />
+          <p className="qr-link">https://street-dog-tracker.onrender.com/dog/{addedDog.id}</p>
+        </div>
+      )}
     </div>
   )
 }

@@ -6,7 +6,7 @@ function DogProfile() {
   const [dog, setDog] = useState(null);
 
   useEffect(() => {
-    fetch(`https://street-dog-tracker.onrender.com/${id}`)
+    fetch(`https://street-dog-tracker.onrender.com/api/dogs/${id}`)
       .then(response => response.json())
       .then(data => {
         setDog(data);
