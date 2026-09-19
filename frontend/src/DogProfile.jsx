@@ -6,7 +6,7 @@ function DogProfile() {
   const [dog, setDog] = useState(null);
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/dogs/${id}`)
+    fetch(`https://street-dog-tracker.onrender.com/${id}`)
       .then(response => response.json())
       .then(data => {
         setDog(data);
@@ -21,7 +21,7 @@ function DogProfile() {
     <div className="page">
       <div className="dog-card" style={{ maxWidth: '320px' }}>
         {dog.photo && (
-          <img src={`http://localhost:5000${dog.photo}`} alt={dog.name} />
+          <img src={`https://street-dog-tracker.onrender.com${dog.photo}`} alt={dog.name} />
         )}
         <div className="dog-card-body">
           <h2>{dog.name}</h2>

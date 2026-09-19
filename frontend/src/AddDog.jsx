@@ -22,7 +22,7 @@ const [addedDog, setAddedDog] = useState(null);
       formData.append('photo', photo);
     }
 
-    const response = await fetch('http://localhost:5000/api/dogs', {
+    const response = await fetch('https://street-dog-tracker.onrender.com', {
       
       method: 'POST',
       body: formData
@@ -94,8 +94,8 @@ const [addedDog, setAddedDog] = useState(null);
       {addedDog && (
   <div className="qr-box">
     <p>QR code for {addedDog.name}:</p>
-    <QRCodeCanvas value={`http://localhost:5173/dog/${addedDog.id}`} size={180} />
-    <p className="qr-link">http://localhost:5173/dog/{addedDog.id}</p>
+    <QRCodeCanvas value={`https://street-dog-tracker.onrender.com/${addedDog.id}`} size={180} />
+    <p className="qr-link">https://street-dog-tracker.onrender.com/{addedDog.id}</p>
   </div>
 )}
     </div>
