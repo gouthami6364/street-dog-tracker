@@ -98,33 +98,20 @@ function DogProfile() {
           </span>
 
           {dog.lastSighting && (
-            <div style={{ marginTop: '12px' }}>
-              <p
-                style={{
-                  fontSize: '0.85rem',
-                  margin: '0 0 6px'
-                }}
-              >
-                Last seen:{' '}
-                {new Date(
-                  dog.lastSighting.seen_at
-                ).toLocaleString()}
-              </p>
-
-              <a
-                href={`https://www.google.com/maps?q=${dog.lastSighting.latitude},${dog.lastSighting.longitude}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  fontSize: '0.85rem',
-                  color: 'var(--forest)',
-                  fontWeight: '600'
-                }}
-              >
-                View on map →
-              </a>
-            </div>
-          )}
+  <div style={{ marginTop: '12px' }}>
+    <p style={{ fontSize: '0.85rem', margin: '0 0 8px' }}>
+      Last seen: {new Date(dog.lastSighting.seen_at).toLocaleString()}
+    </p>
+    <iframe
+      title="last seen location"
+      width="100%"
+      height="200"
+      style={{ border: 0, borderRadius: '10px' }}
+      loading="lazy"
+      src={`https://maps.google.com/maps?q=${dog.lastSighting.latitude},${dog.lastSighting.longitude}&z=15&output=embed`}
+    ></iframe>
+  </div>
+)}
         </div>
       </div>
     </div>
