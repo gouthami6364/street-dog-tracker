@@ -64,13 +64,17 @@ function DogProfile() {
     }
   }, [id])
 
-  if (!dog) {
-    return (
-      <div className="page">
-        <p>Loading...</p>
+ if (!dog) {
+  return (
+    <div className="page">
+      <div className="loading-screen">
+        <span className="spinner dark"></span>
+        <p>Fetching this pup's Pawfile...</p>
+        <p className="loading-hint">First load can take a moment if the server's waking up 🐾</p>
       </div>
-    )
-  }
+    </div>
+  );
+}
 
  return (
   <div className="page">

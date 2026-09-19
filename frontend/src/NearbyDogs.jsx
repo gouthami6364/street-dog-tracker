@@ -30,13 +30,17 @@ function NearbyDogs() {
     );
   }, []);
 
-  if (loading) {
-    return (
-      <div className="page">
-        <p className="nearby-loading">🐾 Sniffing out dogs near you...</p>
+ if (loading) {
+  return (
+    <div className="page">
+      <div className="loading-screen">
+        <span className="spinner dark"></span>
+        <p>Sniffing out dogs near you...</p>
+        <p className="loading-hint">First load can take a moment if the server's waking up 🐾</p>
       </div>
-    );
-  }
+    </div>
+  );
+}
 
   if (error) {
     return (

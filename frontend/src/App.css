@@ -636,3 +636,48 @@ body {
   padding: 60px 20px;
   font-size: 0.95rem;
 }
+.spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.spinner.dark {
+  border: 2px solid rgba(45, 74, 62, 0.2);
+  border-top-color: var(--forest);
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-screen {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--muted);
+}
+
+.loading-screen .spinner.dark {
+  width: 24px;
+  height: 24px;
+  margin: 0 auto 14px;
+  display: block;
+}
+
+.loading-hint {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-top: 8px;
+  opacity: 0;
+  animation: fadeIn 0.3s ease 2s forwards;
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; }
+}

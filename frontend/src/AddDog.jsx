@@ -141,8 +141,15 @@ function AddDog() {
           <option value="no">Not Vaccinated</option>
         </select>
         <button type="submit" disabled={submitting}>
-          {submitting ? 'Adding...' : 'Add Dog'}
-        </button>
+  {submitting ? (
+    <>
+      <span className="spinner"></span>
+      Adding...
+    </>
+  ) : (
+    'Add Dog'
+  )}
+</button>
       </form>
 
       {addedDog && (
