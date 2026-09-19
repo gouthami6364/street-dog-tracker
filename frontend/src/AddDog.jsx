@@ -95,8 +95,8 @@ function AddDog() {
       {addedDog && (
         <div className="qr-box">
           <p>QR code for {addedDog.name}:</p>
-          <QRCodeCanvas value={`https://street-dog-tracker.onrender.com/dog/${addedDog.id}`} size={180} />
-          <p className="qr-link">https://street-dog-tracker.onrender.com/dog/{addedDog.id}</p>
+          <QRCodeCanvas value={`https://street-dog-tracker.vercel.app/dog/${addedDog.id}`} size={180} />
+<p className="qr-link">https://street-dog-tracker.vercel.app/dog/{addedDog.id}</p>
         </div>
       )}
     </div>
