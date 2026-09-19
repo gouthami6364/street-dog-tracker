@@ -396,3 +396,48 @@ body {
   word-break: break-all;
   margin-top: 10px;
 }
+@media (max-width: 600px) {
+  .page {
+    padding: 24px 14px 60px;
+  }
+
+  .add-dog-form {
+    padding: 22px 18px;
+    max-width: 100%;
+  }
+
+  .add-dog-form h2 {
+    font-size: 1.2rem;
+  }
+
+  .photo-box {
+    width: 110px;
+    height: 110px;
+    margin: 0 auto 16px;
+  }
+
+  .dog-card {
+    max-width: 100% !important;
+  }
+
+  .dog-card img {
+    height: 200px;
+  }
+
+  .dog-card-body h2 {
+    font-size: 1.3rem;
+  }
+
+  .qr-box {
+    padding: 16px;
+  }
+
+  .qr-box canvas {
+    max-width: 100%;
+    height: auto !important;
+  }
+
+  .dog-grid {
+    grid-template-columns: 1fr;
+  }
+}
