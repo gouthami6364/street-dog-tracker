@@ -72,58 +72,67 @@ function DogProfile() {
     )
   }
 
-  return (
-    <div className="page">
-      <div
-        className="dog-card"
-        style={{ maxWidth: '320px' }}
-      >
-        {dog.photo && (
-          <img
-            src={dog.photo}
-            alt={dog.name}
-          />
-        )}
+ return (
+  <div className="page">
+    <div className="id-card">
+      <div className="id-card-header">
+        <span className="id-card-logo">🐾</span>
+        <span className="id-card-title">BarkBuddy</span>
+      </div>
 
-        <div className="dog-card-body">
-          <h2>{dog.name}</h2>
+      <div className="id-card-body">
+        <div className="id-card-photo">
+          {dog.photo && <img src={dog.photo} alt={dog.name} />}
+        </div>
 
-          <p>
-            {dog.breed} · {dog.gender}
-          </p>
+        <div className="id-card-details">
+          <p className="id-label">Name</p>
+          <p className="id-value">{dog.name}</p>
 
+          <p className="id-label">Breed</p>
+          <p className="id-value">{dog.breed}</p>
+
+          <p className="id-label">Gender</p>
+          <p className="id-value">{dog.gender}</p>
+
+          <p className="id-label">Vaccination Status</p>
           <span className={`badge ${dog.vaccinated}`}>
-            {dog.vaccinated === 'yes'
-              ? 'Vaccinated'
-              : 'Not vaccinated'}
+            {dog.vaccinated === 'yes' ? 'Vaccinated' : 'Not vaccinated'}
           </span>
-
-          {dog.lastSighting && (
-  <div style={{ marginTop: '12px' }}>
-    <p style={{ fontSize: '0.85rem', margin: '0 0 8px' }}>
-      Last seen: {new Date(dog.lastSighting.seen_at).toLocaleString()}
-    </p>
-    <iframe
-      title="last seen location"
-      width="100%"
-      height="200"
-      style={{ border: 0, borderRadius: '10px' }}
-      loading="lazy"
-      src={`https://maps.google.com/maps?q=${dog.lastSighting.latitude},${dog.lastSighting.longitude}&z=15&output=embed`}
-    ></iframe>
-  </div>
-)}
-<Link to="/nearby" className="action-link secondary">
-  🐾 Dogs near you
-</Link>
-
-<Link to="/" className="action-link primary">
-  ➕ Register another dog
-</Link>
         </div>
       </div>
+
+      <div className="id-card-footer">
+        Registered Street Dog · ID #{dog.id}
+      </div>
     </div>
-  )
+
+    {dog.lastSighting && (
+      <div className="dog-card-body" style={{ maxWidth: '340px', margin: '16px auto 0' }}>
+        <p style={{ fontSize: '0.85rem', margin: '0 0 8px' }}>
+          Last seen: {new Date(dog.lastSighting.seen_at).toLocaleString()}
+        </p>
+        <iframe
+          title="last seen location"
+          width="100%"
+          height="200"
+          style={{ border: 0, borderRadius: '10px' }}
+          loading="lazy"
+          src={`https://maps.google.com/maps?q=${dog.lastSighting.latitude},${dog.lastSighting.longitude}&z=15&output=embed`}
+        ></iframe>
+      </div>
+    )}
+
+    <div style={{ maxWidth: '340px', margin: '0 auto' }}>
+      <Link to="/nearby" className="action-link secondary">
+        🐾 Dogs near you
+      </Link>
+      <Link to="/" className="action-link primary">
+        ➕ Add to Pawfile
+      </Link>
+    </div>
+  </div>
+)
 }
 
 export default DogProfile
