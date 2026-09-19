@@ -30,24 +30,50 @@ function NearbyDogs() {
     );
   }, []);
 
-  if (loading) return <div className="page"><p>Finding dogs near you...</p></div>;
-  if (error) return <div className="page"><p>{error}</p></div>;
+  if (loading) {
+    return (
+      <div className="page">
+        <p className="nearby-loading">🐾 Sniffing out dogs near you...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="page">
+        <p className="nearby-empty">{error}</p>
+        <Link to="/" className="action-link primary" style={{ maxWidth: '340px', margin: '0 auto' }}>
+          ➕ Add to Pawfile
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div className="page">
-      <h2>Dogs near you</h2>
-      {dogs.length === 0 && <p>No dogs found nearby yet.</p>}
-      <div className="dog-grid">
-        {dogs.map((dog) => (
-          <Link to={`/dog/${dog.id}`} key={dog.id} className="dog-card" style={{ textDecoration: 'none', color: 'inherit' }}>
-            {dog.photo && <img src={dog.photo} alt={dog.name} />}
-            <div className="dog-card-body">
-              <h2>{dog.name}</h2>
-              <p>{dog.distance_km.toFixed(1)} km away</p>
-            </div>
-          </Link>
-        ))}
+      <div className="nearby-header">
+        <h2>🐾 Dogs Near You</h2>
+        <p>Sorted by distance from your current location</p>
       </div>
+
+      {dogs.length === 0 ? (
+        <p className="nearby-empty">No dogs found nearby yet.</p>
+      ) : (
+        <div className="nearby-grid">
+          {dogs.map((dog) => (
+            <Link to={`/dog/${dog.id}`} key={dog.id} className="nearby-card">
+              <span className="distance-pill">{dog.distance_km.toFixed(1)} km</span>
+              {dog.photo && <img src={dog.photo} alt={dog.name} />}
+              <div className="nearby-card-body">
+                <h3>{dog.name}</h3>
+                <p style={{ fontSize: '0.82rem', color: 'var(--muted)', margin: 0 }}>
+                  {dog.breed}
+                </p>
+              </div>
+            </Link>
+          ))}
+        </div>
+      )}
     </div>
   )
 }
