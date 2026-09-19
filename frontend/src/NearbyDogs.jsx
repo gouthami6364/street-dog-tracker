@@ -52,7 +52,7 @@ function NearbyDogs() {
   return (
     <div className="page">
       <div className="nearby-header">
-        <h2>🐾 Dogs Near You</h2>
+        <h2>🐾 My Friends</h2>
         <p>Sorted by distance from your current location</p>
       </div>
 
