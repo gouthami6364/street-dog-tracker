@@ -11,6 +11,25 @@ function DogProfile() {
       .then(data => {
         setDog(data);
       });
+
+    // Ask for location and log this sighting
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          fetch(`https://street-dog-tracker.onrender.com/api/dogs/${id}/sightings`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude
+            })
+          });
+        },
+        (error) => {
+          console.log('Location permission denied or unavailable', error);
+        }
+      );
+    }
   }, [id]);
 
   if (!dog) {
@@ -29,6 +48,12 @@ function DogProfile() {
           <span className={`badge ${dog.vaccinated}`}>
             {dog.vaccinated === 'yes' ? 'Vaccinated' : 'Not vaccinated'}
           </span>
+
+          {dog.lastSighting && (
+            <p style={{ marginTop: '12px', fontSize: '0.85rem' }}>
+              Last seen: {new Date(dog.lastSighting.seen_at).toLocaleString()}
+            </p>
+          )}
         </div>
       </div>
     </div>

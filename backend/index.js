@@ -70,10 +70,33 @@ app.get('/api/dogs', async (req, res) => {
 
 app.get('/api/dogs/:id', async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM dogs WHERE id = $1', [req.params.id]);
-    if (result.rows.length === 0) {
+    const dogResult = await pool.query('SELECT * FROM dogs WHERE id = $1', [req.params.id]);
+    if (dogResult.rows.length === 0) {
       return res.status(404).json({ error: 'Dog not found' });
     }
+
+    const sightingResult = await pool.query(
+      'SELECT * FROM sightings WHERE dog_id = $1 ORDER BY seen_at DESC LIMIT 1',
+      [req.params.id]
+    );
+
+    const dog = dogResult.rows[0];
+    dog.lastSighting = sightingResult.rows[0] || null;
+
+    res.json(dog);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Something went wrong' });
+  }
+});
+
+app.post('/api/dogs/:id/sightings', async (req, res) => {
+  try {
+    const { latitude, longitude } = req.body;
+    const result = await pool.query(
+      'INSERT INTO sightings (dog_id, latitude, longitude) VALUES ($1, $2, $3) RETURNING *',
+      [req.params.id, latitude, longitude]
+    );
     res.json(result.rows[0]);
   } catch (err) {
     console.error(err);
