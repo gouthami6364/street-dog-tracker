@@ -1,14 +1,12 @@
-const fs = require('fs');
-
-if (!fs.existsSync('uploads')) {
-  fs.mkdirSync('uploads');
-}
-
-
-
-
 require('dotenv').config();
 const { Pool } = require('pg');
+const cloudinary = require('cloudinary').v2;
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+const multer = require('multer');
+const express = require('express');
+const cors = require('cors');
+
+const app = express();
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
@@ -16,28 +14,17 @@ const pool = new Pool({
 });
 console.log('DB URL loaded:', process.env.DATABASE_URL);
 
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
 
-
-
-
-
-const multer = require('multer');
-const path = require('path');
-const express = require('express');
-const cors = require('cors');
-
-const app = express();
-
-
-
-// Multer storage settings
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/');
-  },
-
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'street-dog-tracker',
+    allowed_formats: ['jpg', 'png', 'jpeg']
   }
 });
 
@@ -45,9 +32,6 @@ const upload = multer({ storage });
 
 app.use(cors());
 app.use(express.json());
-
-// Make uploaded photos accessible
-app.use('/uploads', express.static('uploads'));
 
 // Test route
 app.get('/api/test', (req, res) => {
@@ -58,7 +42,7 @@ app.get('/api/test', (req, res) => {
 app.post('/api/dogs', upload.single('photo'), async (req, res) => {
   try {
     const { name, breed, gender, vaccinated } = req.body;
-    const photo = req.file ? `/uploads/${req.file.filename}` : null;
+    const photo = req.file ? req.file.path : null;
 
     const result = await pool.query(
       'INSERT INTO dogs (name, breed, gender, vaccinated, photo) VALUES ($1, $2, $3, $4, $5) RETURNING *',
@@ -83,6 +67,7 @@ app.get('/api/dogs', async (req, res) => {
     res.status(500).json({ error: 'Something went wrong' });
   }
 });
+
 app.get('/api/dogs/:id', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM dogs WHERE id = $1', [req.params.id]);
