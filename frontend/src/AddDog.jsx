@@ -1,5 +1,6 @@
 import { QRCodeCanvas } from 'qrcode.react'
 import { useState, useRef } from 'react'
+import { Link } from 'react-router-dom'
 
 function AddDog() {
   const [photo, setPhoto] = useState(null);
@@ -109,7 +110,9 @@ setShortLink(shortUrl);
     <p>QR code for {addedDog.name}:</p>
     <QRCodeCanvas value={shortLink || `https://street-dog-tracker.vercel.app/dog/${addedDog.id}`} size={180} />
     <p className="qr-link">{shortLink}</p>
+    
   </div>
+  
 )}
     </div>
   )
