@@ -59,7 +59,7 @@ setShortLink(shortUrl);
   return (
     <div className="page">
       <form className="add-dog-form" onSubmit={handleSubmit}>
-        <h2>Add a dog</h2>
+        <h2>Pawfile 🐾</h2>
 
         <div className="photo-box" onClick={() => fileInputRef.current.click()}>
           {photoPreview ? (
@@ -110,7 +110,7 @@ setShortLink(shortUrl);
     <p>QR code for {addedDog.name}:</p>
     <QRCodeCanvas value={shortLink || `https://street-dog-tracker.vercel.app/dog/${addedDog.id}`} size={180} />
     <p className="qr-link">{shortLink}</p>
-    
+
   </div>
   
 )}
