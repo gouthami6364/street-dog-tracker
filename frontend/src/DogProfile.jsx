@@ -2,57 +2,128 @@ import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 
 function DogProfile() {
-  const { id } = useParams();
-  const [dog, setDog] = useState(null);
+  const { id } = useParams()
+  const [dog, setDog] = useState(null)
 
   useEffect(() => {
+    // Fetch dog details
     fetch(`https://street-dog-tracker.onrender.com/api/dogs/${id}`)
-      .then(response => response.json())
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Failed to fetch dog')
+        }
+        return response.json()
+      })
       .then(data => {
-        setDog(data);
-      });
+        setDog(data)
+      })
+      .catch(error => {
+        console.error('Error fetching dog:', error)
+      })
 
     // Ask for location and log this sighting
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        (position) => {
-          fetch(`https://street-dog-tracker.onrender.com/api/dogs/${id}/sightings`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              latitude: position.coords.latitude,
-              longitude: position.coords.longitude
+        position => {
+          fetch(
+            `https://street-dog-tracker.onrender.com/api/dogs/${id}/sightings`,
+            {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude
+              })
+            }
+          )
+            .then(response => {
+              if (!response.ok) {
+                throw new Error('Failed to record sighting')
+              }
+              return response.json()
             })
-          });
+            .then(data => {
+              console.log('Sighting recorded:', data)
+            })
+            .catch(error => {
+              console.error('Error recording sighting:', error)
+            })
         },
-        (error) => {
-          console.log('Location permission denied or unavailable', error);
+        error => {
+          console.log(
+            'Location permission denied or unavailable:',
+            error.message
+          )
         }
-      );
+      )
+    } else {
+      console.log('Geolocation is not supported by this browser.')
     }
-  }, [id]);
+  }, [id])
 
   if (!dog) {
-    return <div className="page"><p>Loading...</p></div>;
+    return (
+      <div className="page">
+        <p>Loading...</p>
+      </div>
+    )
   }
 
   return (
     <div className="page">
-      <div className="dog-card" style={{ maxWidth: '320px' }}>
+      <div
+        className="dog-card"
+        style={{ maxWidth: '320px' }}
+      >
         {dog.photo && (
-          <img src={dog.photo} alt={dog.name} />
+          <img
+            src={dog.photo}
+            alt={dog.name}
+          />
         )}
+
         <div className="dog-card-body">
           <h2>{dog.name}</h2>
-          <p>{dog.breed} · {dog.gender}</p>
+
+          <p>
+            {dog.breed} · {dog.gender}
+          </p>
+
           <span className={`badge ${dog.vaccinated}`}>
-            {dog.vaccinated === 'yes' ? 'Vaccinated' : 'Not vaccinated'}
+            {dog.vaccinated === 'yes'
+              ? 'Vaccinated'
+              : 'Not vaccinated'}
           </span>
 
           {dog.lastSighting && (
-            <p style={{ marginTop: '12px', fontSize: '0.85rem' }}>
-              Last seen: {new Date(dog.lastSighting.seen_at).toLocaleString()}
-            </p>
+            <div style={{ marginTop: '12px' }}>
+              <p
+                style={{
+                  fontSize: '0.85rem',
+                  margin: '0 0 6px'
+                }}
+              >
+                Last seen:{' '}
+                {new Date(
+                  dog.lastSighting.seen_at
+                ).toLocaleString()}
+              </p>
+
+              <a
+                href={`https://www.google.com/maps?q=${dog.lastSighting.latitude},${dog.lastSighting.longitude}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  fontSize: '0.85rem',
+                  color: 'var(--forest)',
+                  fontWeight: '600'
+                }}
+              >
+                View on map →
+              </a>
+            </div>
           )}
         </div>
       </div>
