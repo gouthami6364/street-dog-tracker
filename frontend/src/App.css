@@ -572,8 +572,8 @@ body {
 
 .nearby-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 18px;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 12px;
   width: 100%;
   max-width: 700px;
 }
@@ -603,24 +603,23 @@ body {
 }
 
 .nearby-card-body {
-  padding: 12px 14px 14px;
+  padding: 8px 10px 10px;
 }
 
 .nearby-card-body h3 {
-  font-size: 1.05rem;
-  margin: 0 0 4px;
-  color: var(--forest-dark);
+  font-size: 0.9rem;
+  margin: 0 0 2px;
 }
 
 .distance-pill {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 6px;
+  right: 6px;
   background: rgba(45, 74, 62, 0.85);
   color: white;
-  font-size: 0.7rem;
+  font-size: 0.62rem;
   font-weight: 600;
-  padding: 4px 10px;
+  padding: 3px 8px;
   border-radius: 999px;
   backdrop-filter: blur(2px);
 }
