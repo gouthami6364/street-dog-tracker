@@ -1,7 +1,6 @@
 import { QRCodeCanvas } from 'qrcode.react'
 import { useState, useRef } from 'react'
 import { Link } from 'react-router-dom'
-import { useRef } from 'react'
 
 function AddDog() {
   const [photo, setPhoto] = useState(null);
@@ -12,50 +11,14 @@ function AddDog() {
   const [gender, setgender] = useState("male");
   const [vaccinated, setVaccinated] = useState("no");
   const [addedDog, setAddedDog] = useState(null);
-const [submitting, setSubmitting] = useState(false);
-const [shortLink, setShortLink] = useState("");
-const qrRef = useRef(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [shortLink, setShortLink] = useState("");
+  const qrRef = useRef(null);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-      setSubmitting(true);
-const handlePrintQR = () => {
-  const canvas = qrRef.current.querySelector('canvas');
-  const imageUrl = canvas.toDataURL('image/png');
+    setSubmitting(true);
 
-  const printWindow = window.open('', '_blank');
-  printWindow.document.write(`
-    <html>
-      <head>
-        <title>${addedDog.name}'s QR Code</title>
-        <style>
-          body {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-            font-family: sans-serif;
-          }
-          img {
-            width: 250px;
-            height: 250px;
-          }
-          p {
-            margin-top: 12px;
-            font-size: 16px;
-            font-weight: bold;
-          }
-        </style>
-      </head>
-      <body>
-        <img src="${imageUrl}" />
-        <p>${addedDog.name} — Pawfile</p>
-      </body>
-    </html>
-  `);
-  printWindow.document.close();
-};
     const formData = new FormData();
     formData.append('name', name);
     formData.append('breed', breed);
@@ -73,10 +36,9 @@ const handlePrintQR = () => {
     const data = await response.json();
     setAddedDog(data.dog);
     const longUrl = `https://street-dog-tracker.vercel.app/dog/${data.dog.id}`;
-const shortenResponse = await fetch(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(longUrl)}`);
-const shortUrl = await shortenResponse.text();
-setShortLink(shortUrl);
-   
+    const shortenResponse = await fetch(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(longUrl)}`);
+    const shortUrl = await shortenResponse.text();
+    setShortLink(shortUrl);
 
     setName("");
     setBreed("");
@@ -84,7 +46,7 @@ setShortLink(shortUrl);
     setVaccinated("no");
     setPhoto(null);
     setPhotoPreview(null);
-      setSubmitting(false);
+    setSubmitting(false);
   };
 
   const handlePhotoChange = (e) => {
@@ -93,6 +55,45 @@ setShortLink(shortUrl);
       setPhoto(file);
       setPhotoPreview(URL.createObjectURL(file));
     }
+  };
+
+  const handlePrintQR = () => {
+    const canvas = qrRef.current.querySelector('canvas');
+    const imageUrl = canvas.toDataURL('image/png');
+
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>${addedDog.name}'s QR Code</title>
+          <style>
+            body {
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              justify-content: center;
+              height: 100vh;
+              margin: 0;
+              font-family: sans-serif;
+            }
+            img {
+              width: 250px;
+              height: 250px;
+            }
+            p {
+              margin-top: 12px;
+              font-size: 16px;
+              font-weight: bold;
+            }
+          </style>
+        </head>
+        <body>
+          <img src="${imageUrl}" />
+          <p>${addedDog.name} — Pawfile</p>
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
   };
 
   return (
@@ -116,13 +117,13 @@ setShortLink(shortUrl);
           style={{ display: 'none' }}
         />
 
-      <input 
-  type="text" 
-  placeholder="Dog name" 
-  value={name} 
-  onChange={(e) => setName(e.target.value)}
-  required
-/>
+        <input
+          type="text"
+          placeholder="Dog name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+        />
         <input
           type="text"
           placeholder="Breed"
@@ -138,24 +139,23 @@ setShortLink(shortUrl);
           <option value="yes">Vaccinated</option>
           <option value="no">Not Vaccinated</option>
         </select>
-      <button type="submit" disabled={submitting}>
-  {submitting ? 'Adding...' : 'Add Dog'}
-</button>
-
+        <button type="submit" disabled={submitting}>
+          {submitting ? 'Adding...' : 'Add Dog'}
+        </button>
       </form>
 
-     {addedDog && (
-  <div className="qr-box">
-    <p>{addedDog.name}'s Pawfile QR code:</p>
-    <div ref={qrRef}>
-      <QRCodeCanvas value={shortLink || `https://street-dog-tracker.vercel.app/dog/${addedDog.id}`} size={180} />
-    </div>
-    <p className="qr-link">{shortLink}</p>
-    <button type="button" onClick={handlePrintQR} className="action-link primary" style={{ border: 'none', cursor: 'pointer', marginTop: '10px' }}>
-      🖨️ Print QR Code
-    </button>
-  </div>
-)}
+      {addedDog && (
+        <div className="qr-box">
+          <p>{addedDog.name}'s Pawfile QR code:</p>
+          <div ref={qrRef}>
+            <QRCodeCanvas value={shortLink || `https://street-dog-tracker.vercel.app/dog/${addedDog.id}`} size={180} />
+          </div>
+          <p className="qr-link">{shortLink}</p>
+          <button type="button" onClick={handlePrintQR} className="action-link primary" style={{ border: 'none', cursor: 'pointer', marginTop: '10px' }}>
+            🖨️ Print QR Code
+          </button>
+        </div>
+      )}
     </div>
   )
 }
