@@ -10,9 +10,10 @@ function AddDog() {
   const [gender, setgender] = useState("male");
   const [vaccinated, setVaccinated] = useState("no");
   const [addedDog, setAddedDog] = useState(null);
-
+const [submitting, setSubmitting] = useState(false);
   const handleSubmit = async (e) => {
     e.preventDefault();
+      setSubmitting(true);
 
     const formData = new FormData();
     formData.append('name', name);
@@ -30,7 +31,7 @@ function AddDog() {
 
     const data = await response.json();
     setAddedDog(data.dog);
-    console.log(data);
+   
 
     setName("");
     setBreed("");
@@ -38,6 +39,7 @@ function AddDog() {
     setVaccinated("no");
     setPhoto(null);
     setPhotoPreview(null);
+      setSubmitting(false);
   };
 
   const handlePhotoChange = (e) => {
@@ -69,17 +71,19 @@ function AddDog() {
           style={{ display: 'none' }}
         />
 
-        <input
-          type="text"
-          placeholder="Dog name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
+      <input 
+  type="text" 
+  placeholder="Dog name" 
+  value={name} 
+  onChange={(e) => setName(e.target.value)}
+  required
+/>
         <input
           type="text"
           placeholder="Breed"
           value={breed}
           onChange={(e) => setBreed(e.target.value)}
+          required
         />
         <select value={gender} onChange={(e) => setgender(e.target.value)}>
           <option value="female">Female</option>
@@ -89,7 +93,10 @@ function AddDog() {
           <option value="yes">Vaccinated</option>
           <option value="no">Not Vaccinated</option>
         </select>
-        <button type="submit">Add Dog</button>
+      <button type="submit" disabled={submitting}>
+  {submitting ? 'Adding...' : 'Add Dog'}
+</button>
+
       </form>
 
       {addedDog && (
