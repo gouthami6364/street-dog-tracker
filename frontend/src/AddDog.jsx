@@ -12,7 +12,7 @@ function AddDog() {
   const [vaccinated, setVaccinated] = useState("no");
   const [addedDog, setAddedDog] = useState(null);
   const [submitting, setSubmitting] = useState(false);
-  const [shortLink, setShortLink] = useState("");
+  
   const qrRef = useRef(null);
 
   const handleSubmit = async (e) => {
@@ -35,10 +35,7 @@ function AddDog() {
 
     const data = await response.json();
     setAddedDog(data.dog);
-    const longUrl = `https://street-dog-tracker.vercel.app/dog/${data.dog.id}`;
-    const shortenResponse = await fetch(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(longUrl)}`);
-    const shortUrl = await shortenResponse.text();
-    setShortLink(shortUrl);
+    
 
     setName("");
     setBreed("");
@@ -149,17 +146,17 @@ function AddDog() {
       </form>
 
       {addedDog && (
-        <div className="qr-box">
-          <p>{addedDog.name}'s Pawfile QR code:</p>
-          <div ref={qrRef}>
-            <QRCodeCanvas value={shortLink || `https://street-dog-tracker.vercel.app/dog/${addedDog.id}`} size={180} />
-          </div>
-          <p className="qr-link">{shortLink}</p>
-          <button type="button" onClick={handlePrintQR} className="action-link primary" style={{ border: 'none', cursor: 'pointer', marginTop: '10px' }}>
-            🖨️ Print QR Code
-          </button>
-        </div>
-      )}
+  <div className="qr-box">
+    <p>{addedDog.name}'s Pawfile QR code:</p>
+    <div ref={qrRef}>
+      <QRCodeCanvas value={`https://street-dog-tracker.vercel.app/dog/${addedDog.id}`} size={180} />
+    </div>
+    <p className="qr-link">https://street-dog-tracker.vercel.app/dog/{addedDog.id}</p>
+    <button type="button" onClick={handlePrintQR} className="action-link primary" style={{ border: 'none', cursor: 'pointer', marginTop: '10px' }}>
+      🖨️ Print QR Code
+    </button>
+  </div>
+)}
     </div>
   )
 }
