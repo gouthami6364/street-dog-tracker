@@ -32,7 +32,34 @@ const upload = multer({ storage });
 
 app.use(cors());
 app.use(express.json());
+app.get('/api/dogs-nearby', async (req, res) => {
+  try {
+    const { lat, lng } = req.query;
 
+    const result = await pool.query(`
+      SELECT dogs.*, sightings.latitude, sightings.longitude, sightings.seen_at,
+      (
+        6371 * acos(
+          cos(radians($1)) * cos(radians(sightings.latitude)) *
+          cos(radians(sightings.longitude) - radians($2)) +
+          sin(radians($1)) * sin(radians(sightings.latitude))
+        )
+      ) AS distance_km
+      FROM dogs
+      JOIN sightings ON sightings.dog_id = dogs.id
+      WHERE sightings.id IN (
+        SELECT DISTINCT ON (dog_id) id FROM sightings ORDER BY dog_id, seen_at DESC
+      )
+      ORDER BY distance_km ASC
+      LIMIT 10
+    `, [lat, lng]);
+
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Something went wrong' });
+  }
+});
 // Test route
 app.get('/api/test', (req, res) => {
   res.json({ message: 'Backend is alive!' });

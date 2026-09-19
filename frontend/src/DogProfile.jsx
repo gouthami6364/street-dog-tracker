@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 function DogProfile() {
   const { id } = useParams()
@@ -112,6 +113,9 @@ function DogProfile() {
     ></iframe>
   </div>
 )}
+<Link to="/nearby" style={{ fontSize: '0.85rem', color: 'var(--forest)', fontWeight: '600', display: 'block', marginTop: '10px' }}>
+  🐾 Dogs near you →
+</Link>
         </div>
       </div>
     </div>
