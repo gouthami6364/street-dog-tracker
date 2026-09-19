@@ -1,0 +1,398 @@
+:root {
+  --forest: #2d4a3e;
+  --forest-dark: #1c3129;
+  --forest-light: #e7eee9;
+  --sand: #f5f0e6;
+  --paper: #fffdf8;
+  --amber: #d4a017;
+  --text: #2b2b26;
+  --muted: #6b6b5e;
+  --border: rgba(43, 43, 38, 0.12);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(
+      circle at 15% 20%,
+      rgba(45, 74, 62, 0.07),
+      transparent 40%
+    ),
+    radial-gradient(
+      circle at 85% 80%,
+      rgba(212, 160, 23, 0.08),
+      transparent 45%
+    ),
+    var(--sand);
+
+  color: var(--text);
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+}
+
+/* Main page */
+
+.page {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 45px 24px 80px;
+}
+
+/* Header */
+
+.page > h1 {
+  text-align: center;
+  margin: 0 0 35px;
+  color: var(--forest-dark);
+  font-size: 2.3rem;
+  letter-spacing: -0.5px;
+}
+
+/* Dog cards */
+
+.dog-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 22px;
+  margin-bottom: 45px;
+}
+
+.dog-card {
+  background: var(--paper);
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  box-shadow: 0 6px 22px rgba(45, 74, 62, 0.08);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.dog-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(45, 74, 62, 0.14);
+}
+
+.dog-card img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  display: block;
+}
+
+.dog-card-body {
+  padding: 18px;
+}
+
+.dog-card-body h2 {
+  margin: 0 0 6px;
+  color: var(--forest-dark);
+  font-size: 1.25rem;
+}
+
+.dog-card-body p {
+  margin: 0 0 12px;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+/* Vaccination badge */
+
+.badge {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.badge.yes {
+  background: #e2f0e5;
+  color: #28613a;
+}
+
+.badge.no {
+  background: #f6e7d9;
+  color: #8a5428;
+}
+
+/* Add dog section */
+
+.add-dog-form {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 32px;
+  background: var(--paper);
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  box-shadow: 0 8px 30px rgba(45, 74, 62, 0.08);
+}
+
+.add-dog-form h2 {
+  margin: 0 0 25px;
+  text-align: center;
+  font-size: 1.5rem;
+  color: var(--forest-dark);
+}
+
+/* Photo upload */
+
+.photo-box {
+  width: 150px;
+  height: 150px;
+  margin: 0 auto 22px;
+
+  border: 2px dashed rgba(43, 43, 38, 0.25);
+  border-radius: 14px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+  overflow: hidden;
+
+  color: var(--muted);
+  font-size: 0.85rem;
+  text-align: center;
+
+  background: var(--sand);
+
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.photo-box:hover {
+  border-color: var(--forest);
+  background: var(--forest-light);
+}
+
+.photo-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Form fields */
+
+.add-dog-form input[type="text"],
+.add-dog-form select {
+  width: 100%;
+  padding: 12px 14px;
+  margin-bottom: 14px;
+
+  border: 1px solid var(--border);
+  border-radius: 9px;
+
+  font-size: 0.95rem;
+
+  background: var(--sand);
+  color: var(--text);
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.add-dog-form input:focus,
+.add-dog-form select:focus {
+  outline: none;
+  border-color: var(--forest);
+  box-shadow: 0 0 0 3px rgba(45, 74, 62, 0.1);
+}
+
+/* Button */
+
+.add-dog-form button {
+  width: 100%;
+  padding: 13px;
+
+  margin-top: 6px;
+
+  background: var(--forest);
+  color: white;
+
+  border: none;
+  border-radius: 9px;
+
+  font-size: 0.95rem;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    transform 0.15s ease;
+}
+
+.add-dog-form button:hover {
+  background: var(--forest-dark);
+}
+
+.add-dog-form button:active {
+  transform: scale(0.98);
+}
+
+/* Mobile */
+
+@media (max-width: 600px) {
+  .page {
+    padding: 30px 16px 60px;
+  }
+
+  .page > h1 {
+    font-size: 1.8rem;
+    margin-bottom: 25px;
+  }
+
+  /* Dog list */
+
+.dog-grid {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto 45px;
+
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+/* Vertical ID card */
+
+.dog-card {
+  width: 100%;
+  background: var(--paper);
+
+  border-radius: 18px;
+  overflow: hidden;
+
+  border: 1px solid var(--border);
+
+  box-shadow: 0 8px 25px rgba(45, 74, 62, 0.1);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.dog-card:hover {
+  transform: translateY(-5px);
+
+  box-shadow:
+    0 14px 35px rgba(45, 74, 62, 0.15);
+}
+
+/* Large photo at the top */
+
+.dog-card > img {
+  width: 100%;
+  height: 260px;
+
+  object-fit: cover;
+
+  display: block;
+}
+
+/* Information */
+
+.dog-card-body {
+  padding: 22px;
+
+  min-height: 180px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.dog-card-body h2 {
+  margin: 0 0 8px;
+
+  color: var(--forest-dark);
+
+  font-size: 1.5rem;
+}
+
+.dog-card-body p {
+  margin: 4px 0;
+
+  color: var(--muted);
+
+  font-size: 0.95rem;
+}
+
+/* Vaccination badge */
+
+.badge {
+  width: fit-content;
+
+  margin-top: 14px;
+
+  padding: 6px 12px;
+
+  border-radius: 20px;
+
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.badge.yes {
+  background: #e2f0e5;
+  color: #28613a;
+}
+
+.badge.no {
+  background: #f6e7d9;
+  color: #8a5428;
+}
+
+/* Tablet */
+
+@media (max-width: 800px) {
+  .dog-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Phone */
+
+@media (max-width: 550px) {
+  .dog-grid {
+    grid-template-columns: 1fr;
+    max-width: 380px;
+  }
+
+  .dog-card > img {
+    height: 300px;
+  }
+}
+
+
+}
+.qr-box {
+  background: var(--paper);
+  border-radius: 14px;
+  padding: 20px;
+  margin-top: 20px;
+  text-align: center;
+  box-shadow: 0 8px 30px rgba(45, 74, 62, 0.08);
+}
+
+.qr-link {
+  font-size: 0.8rem;
+  color: var(--muted);
+  word-break: break-all;
+  margin-top: 10px;
+}
