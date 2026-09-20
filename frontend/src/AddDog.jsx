@@ -97,6 +97,12 @@ function AddDog() {
   `);
   printWindow.document.close();
 };
+const handleCopyLink = () => {
+  const link = `https://street-dog-tracker.vercel.app/dog/${addedDog.id}`;
+  navigator.clipboard.writeText(link)
+    .then(() => alert('Link copied!'))
+    .catch(() => alert('Could not copy link'));
+};
   return (
     <div className="page">
       <form className="add-dog-form" onSubmit={handleSubmit}>
@@ -159,7 +165,10 @@ function AddDog() {
       <QRCodeCanvas value={`https://street-dog-tracker.vercel.app/dog/${addedDog.id}`} size={180} />
     </div>
     <p className="qr-link">https://street-dog-tracker.vercel.app/dog/{addedDog.id}</p>
-    <button type="button" onClick={handlePrintQR} className="action-link primary" style={{ border: 'none', cursor: 'pointer', marginTop: '10px' }}>
+    <button type="button" onClick={handleCopyLink} className="action-link secondary" style={{ border: 'none', cursor: 'pointer', marginTop: '8px' }}>
+      📋 Copy Link
+    </button>
+    <button type="button" onClick={handlePrintQR} className="action-link primary" style={{ border: 'none', cursor: 'pointer', marginTop: '8px' }}>
       🖨️ Print QR Code
     </button>
   </div>
