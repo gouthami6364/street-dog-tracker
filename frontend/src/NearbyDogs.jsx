@@ -1,143 +1,84 @@
-import { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { useState } from 'react'
+import { Link } from 'react-router-dom'
 
 const API_URL = 'https://street-dog-tracker.onrender.com/api'
 
-function DogProfile() {
-  const { id } = useParams()
-  const [dog, setDog] = useState(null)
+function NearbyDogs() {
+  const [dogs, setDogs] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [started, setStarted] = useState(false)
   const [error, setError] = useState('')
-  const [reporting, setReporting] = useState(false)
-  const [sightingMessage, setSightingMessage] = useState('')
 
-  useEffect(() => {
-    let cancelled = false
-
-    fetch(`${API_URL}/dogs/${id}`)
-      .then((response) => {
-        if (!response.ok) throw new Error('Could not find this dog profile.')
-        return response.json()
-      })
-      .then((data) => {
-        if (!cancelled) setDog(data)
-      })
-      .catch((fetchError) => {
-        if (!cancelled) setError(fetchError.message || 'Could not load this dog profile.')
-      })
-
-    return () => {
-      cancelled = true
-    }
-  }, [id])
-
-  const reportSighting = () => {
+  const findNearbyDogs = () => {
     if (!navigator.geolocation) {
-      setSightingMessage('Location is not supported by this browser.')
+      setError('Location is not supported by this browser.')
       return
     }
 
-    setReporting(true)
-    setSightingMessage('')
+    setLoading(true)
+    setStarted(true)
+    setError('')
     navigator.geolocation.getCurrentPosition(
       async ({ coords }) => {
         try {
-          const response = await fetch(`${API_URL}/dogs/${id}/sightings`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ latitude: coords.latitude, longitude: coords.longitude }),
-          })
-          if (!response.ok) throw new Error('Could not save the sighting. Please try again.')
-          const sighting = await response.json()
-          setDog((currentDog) => ({ ...currentDog, lastSighting: sighting }))
-          setSightingMessage('Sighting reported. Thank you for helping!')
-        } catch (reportError) {
-          setSightingMessage(reportError.message || 'Could not save the sighting.')
+          const params = new URLSearchParams({ lat: String(coords.latitude), lng: String(coords.longitude) })
+          const response = await fetch(`${API_URL}/dogs-nearby?${params}`)
+          const data = await response.json()
+          if (!response.ok) throw new Error(data.error || 'Could not load nearby dogs.')
+          setDogs(data)
+        } catch (requestError) {
+          setError(requestError.message || 'Could not load nearby dogs.')
         } finally {
-          setReporting(false)
+          setLoading(false)
         }
       },
       (locationError) => {
-        setReporting(false)
-        setSightingMessage(locationError.code === locationError.PERMISSION_DENIED
-          ? 'Location permission was not granted; no sighting was reported.'
-          : 'Could not get your location; no sighting was reported.')
+        setError(locationError.code === locationError.PERMISSION_DENIED
+          ? 'Location permission was not granted. Allow location access to find nearby dogs.'
+          : 'Could not get your location. Please try again.')
+        setLoading(false)
       },
-      { enableHighAccuracy: false, timeout: 10000, maximumAge: 0 },
-    )
-  }
-
-  if (error) {
-    return <div className="page"><p className="nearby-empty">{error}</p><Link to="/" className="action-link secondary">Back to Pawfile</Link></div>
-  }
-
-  if (!dog) {
-    return (
-      <div className="page">
-        <div className="loading-screen">
-          <span className="spinner dark"></span>
-          <p>Fetching this pup&apos;s Pawfile...</p>
-          <p className="loading-hint">First load can take a moment if the server&apos;s waking up 🐾</p>
-        </div>
-      </div>
+      { enableHighAccuracy: false, timeout: 10000, maximumAge: 60000 },
     )
   }
 
   return (
-    <div className="page">
-      <div className="id-card">
-        <div className="id-card-header">
-          <span className="id-card-logo">🐾</span>
-          <span className="id-card-title">BarkBuddy</span>
-        </div>
-        <div className="id-card-body">
-          <div className="id-card-photo">
-            {dog.photo && <img src={dog.photo} alt={dog.name} />}
-          </div>
-          <div className="id-card-details">
-            <p className="id-label">Name</p>
-            <p className="id-value">{dog.name}</p>
-            <p className="id-label">Breed</p>
-            <p className="id-value">{dog.breed}</p>
-            <p className="id-label">Gender</p>
-            <p className="id-value">{dog.gender}</p>
-            <p className="id-label">Vaccination Status</p>
-            <span className={`badge ${dog.vaccinated}`}>
-              {dog.vaccinated === 'yes' ? 'Vaccinated' : 'Not vaccinated'}
-            </span>
-          </div>
-        </div>
-        <div className="id-card-footer">Registered Street Dog · ID #{dog.id}</div>
+    <main className="page">
+      <header className="nearby-header">
+        <h1>Dogs near you</h1>
+        <p>Find recently seen dogs nearby. Your location is used only for this search.</p>
+      </header>
+
+      <div style={{ maxWidth: '420px', margin: '0 auto 20px' }}>
+        <button type="button" className="action-link primary" onClick={findNearbyDogs} disabled={loading} style={{ width: '100%', border: 0, cursor: loading ? 'wait' : 'pointer' }}>
+          {loading ? 'Finding dogs…' : started ? 'Refresh nearby dogs' : 'Use my location'}
+        </button>
+        {error && <p role="alert" className="nearby-empty">{error}</p>}
       </div>
 
-      {dog.lastSighting && (
-        <div className="dog-card-body" style={{ maxWidth: '340px', margin: '16px auto 0' }}>
-          <p style={{ fontSize: '0.85rem', margin: '0 0 8px' }}>
-            Last seen: {new Date(dog.lastSighting.seen_at).toLocaleString()}
-          </p>
-          <iframe
-            title="last seen location"
-            width="100%"
-            height="200"
-            style={{ border: 0, borderRadius: '10px' }}
-            loading="lazy"
-            src={`https://maps.google.com/maps?q=${dog.lastSighting.latitude},${dog.lastSighting.longitude}&z=15&output=embed`}
-          />
-        </div>
+      {loading && <p className="nearby-loading">Searching for nearby dogs…</p>}
+      {!loading && started && !error && dogs.length === 0 && <p className="nearby-empty">No recent dog sightings were found nearby.</p>}
+      {!loading && dogs.length > 0 && (
+        <section className="nearby-grid" aria-label="Nearby dogs">
+          {dogs.map((dog) => (
+            <Link to={`/dog/${dog.id}`} className="nearby-card" key={dog.id}>
+              {dog.photo ? <img src={dog.photo} alt={dog.name} /> : <div className="nearby-empty" aria-label="No photo">🐾</div>}
+              <span className="distance-pill">{Number(dog.distance_km).toFixed(1)} km</span>
+              <div className="nearby-card-body">
+                <h3>{dog.name}</h3>
+                <p>{dog.breed || 'Breed unknown'}</p>
+                {dog.seen_at && <p>Seen {new Date(dog.seen_at).toLocaleDateString()}</p>}
+              </div>
+            </Link>
+          ))}
+        </section>
       )}
 
-      <div style={{ maxWidth: '340px', margin: '0 auto' }}>
-        <p style={{ fontSize: '0.82rem', color: 'var(--muted)', textAlign: 'center', margin: '16px 0 8px' }}>
-          Viewing this profile does not share your location. Choose below only if you are reporting that you saw this dog.
-        </p>
-        <button type="button" onClick={reportSighting} disabled={reporting} className="action-link primary" style={{ width: '100%', border: 'none', cursor: reporting ? 'wait' : 'pointer' }}>
-          {reporting ? 'Getting location…' : '📍 I saw this dog — report sighting'}
-        </button>
-        {sightingMessage && <p role="status" style={{ fontSize: '0.85rem', textAlign: 'center', color: 'var(--muted)' }}>{sightingMessage}</p>}
-        <Link to="/nearby" className="action-link secondary">🐾 Dogs near you</Link>
-        <Link to="/" className="action-link primary">➕ Add to Pawfile</Link>
+      <div style={{ maxWidth: '420px', margin: '20px auto 0' }}>
+        <Link to="/" className="action-link secondary">Back to Pawfile</Link>
       </div>
-    </div>
+    </main>
   )
 }
 
-export default DogProfile
+export default NearbyDogs
